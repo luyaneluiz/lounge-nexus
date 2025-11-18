@@ -6,16 +6,23 @@ import CardActionArea from "@mui/material/CardActionArea";
 
 export default function CardItem({ item }) {
     return (
-        <Card sx={{ maxWidth: 345 }}>
+        <Card sx={{ maxWidth: 345 }} border={1} borderColor="secondary.main">
             <CardActionArea>
                 <CardMedia component="img" height="300" image={item.image} />
+
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
+                    <Typography
+                        gutterBottom
+                        variant="h5"
+                        component="div"
+                        sx={{ color: "secondary.main" }}
+                    >
                         {item.name}
                     </Typography>
 
-                    <Typography variant="body2" color="text.secondary">
-                        Price: ${item.price} | Credit: {item.credit} pts
+                    <Typography variant="body2" color="text.secondary" pb={1}>
+                        <b>Price:</b> € {item.price} | <b>Credit:</b> €{" "}
+                        {item.credit}
                     </Typography>
 
                     <Typography

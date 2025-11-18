@@ -40,7 +40,7 @@ export default function Items() {
 
     return (
         <Box>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
                 Items
             </Typography>
 
