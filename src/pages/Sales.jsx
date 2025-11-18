@@ -19,7 +19,6 @@ import {
     Alert,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
 
 import { db } from "../../firebaseConfig";
 import {
@@ -87,10 +86,6 @@ export default function Sales() {
         return sales.filter((s) => s.paymentMethod === filterMethod);
     }, [sales, filterMethod]);
 
-    const currentTotal = useMemo(() => {
-        return filteredSales.reduce((acc, curr) => acc + curr.total, 0);
-    }, [filteredSales]);
-
     const handleDelete = async (id) => {
         if (
             window.confirm(
@@ -105,7 +100,6 @@ export default function Sales() {
         }
     };
 
-    // Helper para cores dos Chips
     const getMethodColor = (method) => {
         switch (method) {
             case "Card":
@@ -119,70 +113,51 @@ export default function Sales() {
 
     return (
         <Box>
-            <Typography
-                variant="h4"
-                gutterBottom
-                fontWeight="bold"
-                color="primary"
-                sx={{ mb: 3 }}
-            >
+            <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
                 Sales History
             </Typography>
 
-            {/* --- BARRA DE FILTROS --- */}
-            <Paper elevation={2} sx={{ p: 2, mb: 3, borderRadius: 2 }}>
-                <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} md={3}>
-                        <TextField
-                            label="Start Date"
-                            type="date"
-                            fullWidth
-                            value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <TextField
-                            label="End Date"
-                            type="date"
-                            fullWidth
-                            value={endDate}
-                            onChange={(e) => setEndDate(e.target.value)}
-                            InputLabelProps={{ shrink: true }}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <TextField
-                            select
-                            label="Payment Method"
-                            fullWidth
-                            value={filterMethod}
-                            onChange={(e) => setFilterMethod(e.target.value)}
-                        >
-                            <MenuItem value="All">All Methods</MenuItem>
-                            <MenuItem value="Card">Card</MenuItem>
-                            <MenuItem value="Cash">Cash</MenuItem>
-                        </TextField>
-                    </Grid>
-
-                    {/* Resumo do Total Filtrado */}
-                    <Grid item xs={12} md={3} sx={{ textAlign: "right" }}>
-                        <Typography variant="body2" color="text.secondary">
-                            Filtered Total
-                        </Typography>
-                        <Typography
-                            variant="h4"
-                            color="primary"
-                            fontWeight="bold"
-                        >
-                            € {currentTotal.toFixed(2)}
-                        </Typography>
-                    </Grid>
+            <Grid container spacing={2} alignItems="center" mb={4}>
+                <Grid item xs={12} md={3}>
+                    <TextField
+                        label="Start Date"
+                        type="date"
+                        fullWidth
+                        value={startDate}
+                        sx={{ backgroundColor: "white" }}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        InputLabelProps={{ shrink: true }}
+                    />
                 </Grid>
-            </Paper>
 
-            {/* --- TABELA DE DADOS --- */}
+                <Grid item xs={12} md={3}>
+                    <TextField
+                        label="End Date"
+                        type="date"
+                        fullWidth
+                        value={endDate}
+                        sx={{ backgroundColor: "white" }}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        InputLabelProps={{ shrink: true }}
+                    />
+                </Grid>
+
+                <Grid item xs={12} md={3}>
+                    <TextField
+                        select
+                        label="Payment Method"
+                        fullWidth
+                        sx={{ backgroundColor: "white" }}
+                        value={filterMethod}
+                        onChange={(e) => setFilterMethod(e.target.value)}
+                    >
+                        <MenuItem value="All">All Methods</MenuItem>
+                        <MenuItem value="Card">Card</MenuItem>
+                        <MenuItem value="Cash">Cash</MenuItem>
+                    </TextField>
+                </Grid>
+            </Grid>
+
             <TableContainer
                 component={Paper}
                 elevation={3}
