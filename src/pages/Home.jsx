@@ -6,7 +6,6 @@ import {
     Grid,
     Paper,
     Typography,
-    CircularProgress,
     Card,
     CardContent,
     useTheme,
@@ -200,18 +199,18 @@ export default function Home() {
                     label: "# of Items Sold",
                     data: Object.values(itemsCount),
                     backgroundColor: [
-                        "#1976d2",
-                        "#dc004e",
-                        "#388e3c",
-                        "#fbc02d",
-                        "#8e24aa",
-                        "#424242",
+                        theme.palette.charts[1],
+                        theme.palette.charts[2],
+                        theme.palette.charts[3],
+                        theme.palette.charts[4],
+                        theme.palette.charts[5],
+                        theme.palette.charts[6],
                     ],
                     borderWidth: 1,
                 },
             ],
         };
-    }, [monthSales]);
+    }, [monthSales, theme]);
 
     const paymentChartData = useMemo(() => {
         const paymentTotals = {};
@@ -227,17 +226,15 @@ export default function Home() {
                     label: "Revenue (€)",
                     data: Object.values(paymentTotals),
                     backgroundColor: [
-                        "#2e7d32", // Verde (Cash/Dinheiro)
-                        "#0288d1", // Azul (Card/Cartão)
-                        "#ed6c02", // Laranja (Room Charge)
-                        "#9c27b0", // Roxo (Outro)
+                        theme.palette.charts[1],
+                        theme.palette.charts[2],
                     ],
                     borderColor: "#ffffff",
                     borderWidth: 2,
                 },
             ],
         };
-    }, [monthSales]);
+    }, [monthSales, theme.palette.charts]);
 
     const monthlyBarChartData = useMemo(() => {
         const salesByMonth = Array(12).fill(0);
@@ -316,22 +313,6 @@ export default function Home() {
                         </Select>
                     </FormControl>
                 </Box>
-
-                <Button
-                    color="primary"
-                    component={Link}
-                    to="/register-sale"
-                    startIcon={<PointOfSaleIcon />}
-                    sx={{
-                        backgroundColor: theme.palette.primary.main,
-                        color: "#fff",
-                        "&:hover": {
-                            backgroundColor: theme.palette.primary.dark,
-                        },
-                    }}
-                >
-                    Register Sale
-                </Button>
             </Box>
 
             <Grid container spacing={3} sx={{ mb: 4 }}>
@@ -340,7 +321,7 @@ export default function Home() {
                         title="Total Revenue"
                         value={`€ ${kpiData.totalRevenue.toFixed(2)}`}
                         icon={<AttachMoneyIcon fontSize="large" />}
-                        color="#388e3c"
+                        color={theme.palette.charts[0]}
                     />
                 </Grid>
 
@@ -349,7 +330,7 @@ export default function Home() {
                         title="Total Orders"
                         value={kpiData.totalOrders}
                         icon={<ShoppingBagIcon fontSize="large" />}
-                        color="#1976d2"
+                        color={theme.palette.charts[1]}
                     />
                 </Grid>
 
@@ -358,7 +339,7 @@ export default function Home() {
                         title="Avg. Ticket"
                         value={`€ ${kpiData.avgTicket.toFixed(2)}`}
                         icon={<TrendingUpIcon fontSize="large" />}
-                        color="#f57c00"
+                        color={theme.palette.charts[5]}
                     />
                 </Grid>
             </Grid>

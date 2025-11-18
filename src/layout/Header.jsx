@@ -51,6 +51,20 @@ export default function Header({ isActive }) {
                     <Button
                         color="inherit"
                         component={Link}
+                        to="/register-sale"
+                        sx={{
+                            borderRadius: 0,
+                            borderBottom: isActive("/register-sale")
+                                ? "2px solid white"
+                                : "none",
+                        }}
+                    >
+                        Register sale
+                    </Button>
+
+                    <Button
+                        color="inherit"
+                        component={Link}
                         to="/items"
                         sx={{
                             borderRadius: 0,
