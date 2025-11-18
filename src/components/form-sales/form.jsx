@@ -30,7 +30,6 @@ function FormVendas() {
     const [loadingProdutos, setLoadingProdutos] = useState(true);
     const [feedback, setFeedback] = useState({ type: "", message: "" });
 
-    // 1. Buscar Produtos do Banco (Executa uma vez)
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, "items"), (snapshot) => {
             const lista = snapshot.docs.map((doc) => ({
@@ -43,21 +42,18 @@ function FormVendas() {
         return () => unsubscribe();
     }, []);
 
-    // 2. Função Otimizada para mudar quantidade
     const handleQuantidadeChange = useCallback((id, delta) => {
         setQuantities((prev) => {
             const qtdAtual = prev[id] || 0;
-            const novaQtd = Math.max(0, qtdAtual + delta); // Evita números negativos
+            const novaQtd = Math.max(0, qtdAtual + delta);
 
             const novoEstado = { ...prev, [id]: novaQtd };
-            // Se for 0, remove do objeto para limpar memória
             if (novaQtd === 0) delete novoEstado[id];
 
             return novoEstado;
         });
     }, []);
 
-    // 3. Cálculo Otimizado de Totais
     const { totalToPay, totalItems, totalCredit } = useMemo(() => {
         let total = 0;
         let credit = 0;
@@ -75,7 +71,6 @@ function FormVendas() {
         return { totalToPay: total, totalItems: itens, totalCredit: credit };
     }, [quantities, item]);
 
-    // 4. Enviar Venda
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -115,8 +110,8 @@ function FormVendas() {
                 type: "success",
                 message: `Sale of € ${totalToPay} registered!`,
             });
-            setQuantities({}); // Clear the cart
-            setMetodo("Card"); // Reset payment method to default
+            setQuantities({});
+            setMetodo("Card");
         } catch (e) {
             console.error("Error:", e);
             setFeedback({ type: "error", message: "Error registering sale." });
@@ -172,7 +167,6 @@ function FormVendas() {
                         </Grid>
                     )}
 
-                    {/* Espaço extra no final para garantir que o último card não fique escondido atrás do rodapé */}
                     <Box sx={{ height: 20 }} />
                 </Box>
 
@@ -275,7 +269,6 @@ function FormVendas() {
                     zIndex: 10,
                 }}
             >
-                {/* Feedback de Erro/Sucesso */}
                 {feedback.message && (
                     <Alert
                         severity={feedback.type}
@@ -355,7 +348,7 @@ function FormVendas() {
                     {loading ? (
                         <CircularProgress size={28} color="inherit" />
                     ) : (
-                        `FINALIZAR VENDA`
+                        `Register sale`
                     )}
                 </Button>
             </Paper>
