@@ -2,14 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 
-// Ícones
-import HomeIcon from "@mui/icons-material/Home";
-import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
-import InventoryIcon from "@mui/icons-material/Inventory";
-
 export default function Header({ isActive }) {
     return (
-        <AppBar position="static" color="primary" enableColorOnDark>
+        <AppBar
+            position="static"
+            color="primary"
+            sx={{ paddingY: 1 }}
+            enableColorOnDark
+        >
             <Toolbar>
                 <Typography
                     variant="h6"
@@ -19,13 +19,13 @@ export default function Header({ isActive }) {
                     LoungeNexus
                 </Typography>
 
-                <Box sx={{ display: "flex", gap: 1 }}>
+                <Box sx={{ display: "flex", gap: 2 }}>
                     <Button
                         color="inherit"
                         component={Link}
                         to="/"
-                        startIcon={<HomeIcon />}
                         sx={{
+                            borderRadius: 0,
                             borderBottom: isActive("/")
                                 ? "2px solid white"
                                 : "none",
@@ -33,12 +33,13 @@ export default function Header({ isActive }) {
                     >
                         Dashboard
                     </Button>
+
                     <Button
                         color="inherit"
                         component={Link}
                         to="/sales"
-                        startIcon={<PointOfSaleIcon />}
                         sx={{
+                            borderRadius: 0,
                             borderBottom: isActive("/sales")
                                 ? "2px solid white"
                                 : "none",
@@ -46,12 +47,13 @@ export default function Header({ isActive }) {
                     >
                         Sales
                     </Button>
+
                     <Button
                         color="inherit"
                         component={Link}
                         to="/items"
-                        startIcon={<InventoryIcon />}
                         sx={{
+                            borderRadius: 0,
                             borderBottom: isActive("/items")
                                 ? "2px solid white"
                                 : "none",
