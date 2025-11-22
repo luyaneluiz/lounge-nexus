@@ -56,7 +56,7 @@ const ItemCard = memo(({ item, quantity, onChange }) => {
                 >
                     <CardMedia
                         component="img"
-                        height="140"
+                        height="180"
                         image={item.image}
                         alt={item.nome}
                         onError={(e) => {
@@ -66,16 +66,12 @@ const ItemCard = memo(({ item, quantity, onChange }) => {
                         loading="lazy"
                     />
                     <CardContent sx={{ pb: 0, flexGrow: 1 }}>
-                        <Typography
-                            gutterBottom
-                            variant="h6"
-                            component="div"
-                            noWrap
-                        >
+                        <Typography variant="h6" component="div" noWrap>
                             {item.name}
                         </Typography>
+
                         <Typography variant="body2" color="text.secondary">
-                            € {item.price.toFixed(2)} un.
+                            € {item.price.toFixed(2)}
                         </Typography>
                     </CardContent>
                 </CardActionArea>
@@ -85,6 +81,7 @@ const ItemCard = memo(({ item, quantity, onChange }) => {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
+                        height: 40,
                         p: 1,
                         bgcolor: isSelected ? "#e3f2fd" : "transparent",
                         mt: "auto",
@@ -93,17 +90,19 @@ const ItemCard = memo(({ item, quantity, onChange }) => {
                     {isSelected ? (
                         <>
                             <IconButton
-                                size="medium"
+                                size="small"
                                 onClick={handleRemove}
                                 color="error"
                             >
                                 <RemoveCircleOutlineIcon />
                             </IconButton>
+
                             <Typography fontWeight="bold" variant="h6">
                                 {quantity}
                             </Typography>
+
                             <IconButton
-                                size="medium"
+                                size="small"
                                 onClick={handleAdd}
                                 color="primary"
                             >
@@ -115,7 +114,7 @@ const ItemCard = memo(({ item, quantity, onChange }) => {
                             variant="caption"
                             sx={{
                                 ml: 1,
-                                color: "text.disabled",
+                                color: "secondary.main",
                                 width: "100%",
                                 textAlign: "center",
                             }}
