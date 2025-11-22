@@ -30,7 +30,7 @@ const ItemCard = memo(({ item, quantity, onChange }) => {
     };
 
     return (
-        <Grid size={{ xs: 12, sm: 6, md: 4 }} spacing={1}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }} spacing={1} overflow={"hidden"}>
             <Card
                 sx={{
                     border: isSelected
