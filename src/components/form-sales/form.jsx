@@ -16,6 +16,8 @@ import {
     Chip,
 } from "@mui/material";
 import EuroIcon from "@mui/icons-material/Euro";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
+import Money from "@mui/icons-material/Money";
 
 import { db } from "../../../firebaseConfig";
 import { collection, addDoc, Timestamp, onSnapshot } from "firebase/firestore";
@@ -24,7 +26,7 @@ import ItemCard from "./item-card";
 function FormVendas() {
     const [item, setItems] = useState([]);
     const [quantities, setQuantities] = useState({});
-    const [metodo, setMetodo] = useState("Cartão");
+    const [metodo, setMetodo] = useState("Card");
 
     const [loading, setLoading] = useState(false);
     const [loadingProdutos, setLoadingProdutos] = useState(true);
@@ -54,21 +56,27 @@ function FormVendas() {
         });
     }, []);
 
-    const { totalToPay, totalItems, totalCredit } = useMemo(() => {
+    const { totalToPay, selectedItems, totalCredit } = useMemo(() => {
         let total = 0;
         let credit = 0;
-        let itens = 0;
+        let selectedItems = [];
 
         item.forEach((p) => {
             const qtd = quantities[p.id] || 0;
+
+            console.log("Item:", p.name, "Quantity:", qtd);
             if (qtd > 0) {
                 total += p.price * qtd;
-                credit += p.credit * qtd;
-                itens += qtd;
+                credit += (p.credit || 0) * qtd;
+                selectedItems.push({ item: p, quantity: qtd });
             }
         });
 
-        return { totalToPay: total, totalItems: itens, totalCredit: credit };
+        return {
+            totalToPay: total,
+            selectedItems: selectedItems,
+            totalCredit: credit,
+        };
     }, [quantities, item]);
 
     const handleSubmit = async (e) => {
@@ -129,22 +137,13 @@ function FormVendas() {
                 height: "100%",
             }}
         >
-            <Paper
-                elevation={10}
-                sx={{
-                    p: 3,
-                    marginY: 4,
-                    borderRadius: "16px 16px 0 0",
-                    bgcolor: "white",
-                    zIndex: 10,
-                }}
-            >
+            <Box py={2}>
                 <Typography
-                    variant="h5"
+                    variant="h6"
+                    fontWeight="bold"
                     component="h2"
                     gutterBottom
-                    color="blue"
-                    pb={2}
+                    color="primary.light"
                 >
                     Items
                 </Typography>
@@ -166,8 +165,6 @@ function FormVendas() {
                             ))}
                         </Grid>
                     )}
-
-                    <Box sx={{ height: 20 }} />
                 </Box>
 
                 <Typography
@@ -176,15 +173,22 @@ function FormVendas() {
                     align="right"
                     mt={2}
                 >
-                    Total Items: {totalItems}
+                    {selectedItems.map((i) => (
+                        <Chip
+                            key={i.item.id}
+                            label={`${i.quantity}x ${i.item.name}`}
+                            size="small"
+                            sx={{ mr: 0.5, mb: 0.5 }}
+                        />
+                    ))}
                 </Typography>
-            </Paper>
+            </Box>
 
             <Paper
                 elevation={10}
                 sx={{
                     p: 3,
-                    borderRadius: "16px 16px 0 0",
+                    borderRadius: "16px",
                     bgcolor: "white",
                     zIndex: 10,
                 }}
@@ -199,10 +203,11 @@ function FormVendas() {
                     }}
                 >
                     <Typography
-                        variant="h5"
+                        variant="h6"
+                        fontWeight="bold"
                         component="h2"
                         gutterBottom
-                        color="blue"
+                        color="primary.light"
                     >
                         Total
                     </Typography>
@@ -217,8 +222,15 @@ function FormVendas() {
                     </Typography>
                 </Box>
 
-                <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
-                    <Box>
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 4,
+                        justifyContent: "space-between",
+                    }}
+                >
+                    <Box width="50%">
                         <Typography
                             variant="body2"
                             color="text.secondary"
@@ -238,7 +250,7 @@ function FormVendas() {
                         </Typography>
                     </Box>
 
-                    <Box>
+                    <Box width="50%">
                         <Typography
                             variant="body2"
                             color="text.secondary"
@@ -258,17 +270,94 @@ function FormVendas() {
                         </Typography>
                     </Box>
                 </Box>
-            </Paper>
 
-            <Paper
-                elevation={10}
-                sx={{
-                    p: 3,
-                    borderRadius: "16px 16px 0 0",
-                    bgcolor: "white",
-                    zIndex: 10,
-                }}
-            >
+                <Divider sx={{ my: 2 }} />
+
+                <Grid item xs={12} md={7} mb={4}>
+                    <FormControl fullWidth>
+                        <FormLabel
+                            id="metodo-label"
+                            sx={{ mb: 1, fontWeight: "bold" }}
+                            color="secondary"
+                        >
+                            Payment Method
+                        </FormLabel>
+
+                        <RadioGroup
+                            aria-labelledby="metodo-label"
+                            name="payment-method"
+                            value={metodo}
+                            sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                gap: 2,
+                            }}
+                            onChange={(e) => setMetodo(e.target.value)}
+                        >
+                            <FormControlLabel
+                                value="Card"
+                                control={<Radio sx={{ display: "none" }} />}
+                                label={
+                                    <Box
+                                        sx={{
+                                            border: "1px solid #ccc",
+                                            borderRadius: 1,
+                                            px: 4,
+                                            py: 1,
+                                            alignItems: "center",
+                                            display: "flex",
+                                            borderColor:
+                                                metodo === "Card"
+                                                    ? "primary.light"
+                                                    : "transparent",
+                                        }}
+                                    >
+                                        <CreditCardIcon
+                                            sx={{
+                                                mr: 1,
+                                                fontSize: 28,
+                                                color: "primary.main",
+                                            }}
+                                        />
+                                        Card
+                                    </Box>
+                                }
+                                sx={{ m: 0 }}
+                            />
+                            <FormControlLabel
+                                value="Cash"
+                                control={<Radio sx={{ display: "none" }} />}
+                                label={
+                                    <Box
+                                        sx={{
+                                            border: "1px solid #ccc",
+                                            borderRadius: 1,
+                                            px: 4,
+                                            py: 1,
+                                            alignItems: "center",
+                                            display: "flex",
+                                            borderColor:
+                                                metodo === "Cash"
+                                                    ? "primary.light"
+                                                    : "transparent",
+                                        }}
+                                    >
+                                        <Money
+                                            sx={{
+                                                mr: 1,
+                                                fontSize: 28,
+                                                color: "primary.main",
+                                            }}
+                                        />
+                                        Cash
+                                    </Box>
+                                }
+                                sx={{ m: 0 }}
+                            />
+                        </RadioGroup>
+                    </FormControl>
+                </Grid>
+
                 {feedback.message && (
                     <Alert
                         severity={feedback.type}
@@ -279,58 +368,6 @@ function FormVendas() {
                     </Alert>
                 )}
 
-                <Grid item xs={12} md={7}>
-                    <FormControl fullWidth>
-                        <FormLabel id="metodo-label" sx={{ mb: 1 }}>
-                            Payment Method
-                        </FormLabel>
-
-                        <RadioGroup
-                            aria-labelledby="metodo-label"
-                            name="payment-method"
-                            value={metodo}
-                            onChange={(e) => setMetodo(e.target.value)}
-                        >
-                            <FormControlLabel
-                                value="Card"
-                                control={<Radio />}
-                                label={
-                                    <Box
-                                        sx={{
-                                            border: "1px solid #ccc",
-                                            borderRadius: 1,
-                                            px: 2,
-                                            py: 0.5,
-                                        }}
-                                    >
-                                        Card
-                                    </Box>
-                                }
-                                sx={{ m: 0 }}
-                            />
-                            <FormControlLabel
-                                value="Cash"
-                                control={<Radio />}
-                                label={
-                                    <Box
-                                        sx={{
-                                            border: "1px solid #ccc",
-                                            borderRadius: 1,
-                                            px: 2,
-                                            py: 0.5,
-                                        }}
-                                    >
-                                        Cash
-                                    </Box>
-                                }
-                                sx={{ m: 0 }}
-                            />
-                        </RadioGroup>
-                    </FormControl>
-                </Grid>
-
-                <Divider sx={{ my: 2 }} />
-
                 <Button
                     type="submit"
                     variant="contained"
@@ -338,8 +375,8 @@ function FormVendas() {
                     size="large"
                     disabled={loading || totalToPay === 0}
                     sx={{
-                        py: 2,
-                        fontSize: "1.2rem",
+                        py: 1.5,
+                        fontSize: "20px",
                         fontWeight: "bold",
                         textTransform: "none",
                         borderRadius: 2,
