@@ -21,14 +21,14 @@ const theme = createTheme({
             paper: "#ffffff",
         },
         charts: [
-            "#20243B", // Primary Main
-            "#867650", // Secondary Main
-            "#3A4066", // Primary Light
-            "#B09B6B", // Secondary Light
-            "#151726", // Primary Dark
-            "#594E35", // Secondary Dark
-            "#6E7599", // Slate Blue
-            "#D1C4A9", // Beige/Champagne
+            "#20243B",
+            "#867650",
+            "#3A4066",
+            "#B09B6B",
+            "#151726",
+            "#594E35",
+            "#6E7599",
+            "#D1C4A9",
         ],
     },
     typography: {
