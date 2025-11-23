@@ -8,7 +8,6 @@ import { auth } from "../../firebaseConfig";
 
 const AuthContext = createContext();
 
-// Hook para usar o auth em qualquer lugar
 export function useAuth() {
     return useContext(AuthContext);
 }
@@ -17,12 +16,10 @@ export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Função de Login
     function login(email, password) {
         return signInWithEmailAndPassword(auth, email, password);
     }
 
-    // Função de Logout
     function logout() {
         return signOut(auth);
     }
